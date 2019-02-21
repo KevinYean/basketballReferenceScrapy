@@ -1,126 +1,27 @@
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+<select>
+    <option value="timberwolves">Timberwolves</option>
+    <option value="suns">Suns</option>
+</select>
+
+<select>
+        <option value="2018">2018</option>
+        <option value="2017">2017</option>
+</select>
+
+<button class="randomize">randomize</button>
+
 <script src="http://d3js.org/d3.v3.min.js"></script>
-<div class="widget">
-    <div class="header">Timberwolves 2018-2019 Salary Distribution</div>
-    <div id="chart" class="chart-container">
-</div>
+<script src="index.js"></script> 
 
-<script>
 
-var dataset = [
-        {name: 'Luol Deng', value: '14,354,067' },
-        {name: 'Anthony Tolliver', value: '5,750,000'},
-        {name: 'Keita Bates-Diop', value:'838,464'},
-        {name: 'Derrick Rose', value:'2,176,270'},
-        {name: 'Josh Okogie', value:'2,160,720'},
-        {name: 'Taj Gibson', value:'14,000,000'},
-        {name: 'Jeff Teague', value:'19,000,000'},
-        {name: 'Jerryd Bayless', value:'8,575,916'},
-        {name: 'Dario Saric', value:'3,481,986'},
-        {name: 'Tyus Jones', value: '244,053'},
-        {name: 'Karl Anthony Town', value:'7,389,435'},
-        {name: 'Andre Wiggins', value:'25,467,250'},
-        {name: 'Gorgui Dieng', value:'15,170,787'},
-    ];
 
-var w=400,h=400;
+</body>
 
-var regex = /[0-9]/g;
- 
-var radius=(w-20)/2;
-  
-var pie=d3.layout.pie()
-         .value(function(d){
-             var decimalValue = d.value.match(regex);
-             decimalValue = decimalValue.join(decimalValue);
-             return decimalValue});
-  
-var arc=d3.svg.arc()
-         .innerRadius(75)
-         .outerRadius(radius);
-  
-var color = d3.scale.category20();
-  
-var svg=d3.select("#chart")
-         .append("svg")
-         .attr({
-             width:w,
-             height:h,
-             class:'shadow'
-         }).append('g')
-         .attr('transform','translate('+(w/2)+','+(h/2)+')');
-  
-var path=svg.selectAll('path')
-         .data(pie(dataset))
-         .enter()
-         .append('path')
-         .attr({
-             d:arc,
-             fill:function(d,i){
-                 return color(i);
-             }
-         })
-         .style({
-             'fill-opacity':.5,
-             stroke: function(d,i){
-                 return color(i);
-             },
-             'stroke-width': '2px'
-         });
-  
-  
-var text=svg.selectAll('text')
-         .data(pie(dataset))
-         .enter()
-         .append("text")
-         .attr("transform", function (d) {
-             return "translate(" + arc.centroid(d) + ")";
-         })
-         .attr("text-anchor", "middle")
-         .text(function(d){
-             return d.data.name+ " ($" + d.data.value+")" ;
-         })
-         .style({
-             fill:function(d,i){
-                 return color(i);
-             },
-             'font-size':'12px',
-             'font-weight': 'bold'
-  
-         });
-</script>
-
-<style>
-body {
-    background-color: #ccc;
-    width: 100%;
-    font-family: 'Roboto', sans-serif;
-    height: 100%;
-}
- 
-.widget {
-    margin: 0 auto;
-    width:450px;
-    margin-top:50px;
-    background-color:#fff;
-    border-radius: 5px;
-    box-shadow: 1px 1px 4px 0px rgba(0,0,0,0.3);
- 
-}
- 
-.header{
-    background-color: #eee;
-    height:40px;
-    color:#555;
-    text-align: center;
-    line-height: 40px;
-    border-top-left-radius: 7px;
-    border-top-right-radius: 7px;
-    font-weight: 400;
-    font-size: 1.2em;
-    text-shadow: 1px 1px #fff;
-    border-bottom: 1px solid #eaeaea;
-}
- 
-.chart-container{
-    padding:25px;
-}</style>
