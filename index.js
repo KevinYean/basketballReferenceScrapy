@@ -53,10 +53,6 @@ var dataset2 = [
     { label: "Devin Booker", value: 3314365}
 ]
 
-
-
-
-
 var allDataSets = [dataset1,dataset2]
 
 

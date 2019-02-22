@@ -1,0 +1,38 @@
+[
+   {
+      "Player": "Kevin McHale",
+      "Team": "Boston Celtics",
+      "Season": "1984-85",
+      "Salary": "$1,000,000"
+   },
+   {
+      "Player": "Cedric Maxwell",
+      "Team": "Boston Celtics",
+      "Season": "1984-85",
+      "Salary": "$830,000"
+   },
+   {
+      "Player": "Greg Kite",
+      "Team": "Boston Celtics",
+      "Season": "1984-85",
+      "Salary": "$120,000"
+   },
+   {
+      "Player": "Carlos Clark",
+      "Team": "Boston Celtics",
+      "Season": "1984-85",
+      "Salary": "$65,000"
+   },
+   {
+      "Player": "Larry Bird",
+      "Team": "Boston Celtics",
+      "Season": "1984-85",
+      "Salary": "$1,800,000"
+   },
+   {
+      "Player": "Danny Ainge",
+      "Team": "Boston Celtics",
+      "Season": "1984-85",
+      "Salary": "$400,000"
+   }
+]
