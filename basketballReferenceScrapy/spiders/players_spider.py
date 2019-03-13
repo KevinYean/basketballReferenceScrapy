@@ -12,7 +12,7 @@ class QuotesSpider(scrapy.Spider):
 
     def start_requests(self):
         urls = [  # List of Urls to go through
-            "https://www.basketball-reference.com/leagues/NBA_1989.html"
+            "https://www.basketball-reference.com/leagues/NBA_1995.html"
         ]
         for url in urls:  # Run parse for each url in urls
             yield scrapy.Request(url=url, callback=self.parseLeague)
@@ -62,7 +62,7 @@ class QuotesSpider(scrapy.Spider):
             length = len(seasonSalary)
             #Regular expression to split with <td></td>
             season = re.findall(r'>(.+?)</th>', i)
-            targetyear = "1988-89"
+            targetyear = "1994-95"
             if(str(season[0]) == targetyear):
                 yield {
                     'Player':playerName,
