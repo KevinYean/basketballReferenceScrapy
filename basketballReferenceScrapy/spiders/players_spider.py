@@ -12,7 +12,7 @@ class QuotesSpider(scrapy.Spider):
 
     def start_requests(self):
         urls = [  # List of Urls to go through
-            "https://www.basketball-reference.com/leagues/NBA_1995.html"
+            "https://www.basketball-reference.com/leagues/NBA_2019.html"
         ]
         for url in urls:  # Run parse for each url in urls
             yield scrapy.Request(url=url, callback=self.parseLeague)
