@@ -9,14 +9,10 @@ class QuotesSpider(scrapy.Spider):
 
     def start_requests(self):
         urls = [  # List of Urls to go through
-            "https://www.basketball-reference.com/teams/TOR/2019.html",
-            "https://www.basketball-reference.com/teams/PHI/2019.html",
-            "https://www.basketball-reference.com/teams/BOS/2019.html",
-            "https://www.basketball-reference.com/teams/BRK/2019.html",
-            "https://www.basketball-reference.com/teams/NYK/2019.html"
+           "https://www.basketball-reference.com/leagues/NBA_2019.html" 
         ]
         for url in urls:  # Run parse for each url in urls
-            yield scrapy.Request(url=url, callback=self.parseTeam)
+            yield scrapy.Request(url=url, callback=self.parseLeague)
 
     def parseLeague(self, response):
         #League Specific
@@ -53,7 +49,11 @@ class QuotesSpider(scrapy.Spider):
         year = re.sub(r'[^0-9\-]','',year)
         player = response.xpath('//div[contains(@itemtype,"Person")]//strong//strong').get()
         player = re.findall(r'<strong>(.+?)</strong>', player)
-        shootingDistanceAttempts = response.xpath('//tr//td[contains(@data-stat,"fga")]')[7:12]
+        startArray = 7
+        if response.xpath('//tr //a[contains(@href,"playoffs")]'): #If it does not have a playoff season
+            startArray = 8
+            print("No Playoff")
+        shootingDistanceAttempts = response.xpath('//tr//td[contains(@data-stat,"fga")]')[startArray:startArray+5]
         shootingDistanceAttempts = shootingDistanceAttempts.css('td::text').getall()
         yield{
             'Player': player[0],
@@ -65,7 +65,7 @@ class QuotesSpider(scrapy.Spider):
             '16ft to <3-pt': shootingDistanceAttempts[3],
             '3-pt': shootingDistanceAttempts[4]
         }
-        shootingDistanceMade = response.xpath('//tr//td[@data-stat="fg"]')[7:12]
+        shootingDistanceMade = response.xpath('//tr//td[@data-stat="fg"]')[startArray:startArray+5]
         shootingDistanceMade = shootingDistanceMade.css('td::text').getall()
         yield{
             'Player': player[0],

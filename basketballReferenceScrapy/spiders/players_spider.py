@@ -3,6 +3,7 @@ import re
 
 #response.css('td[data-stat="player"]').getall() //Teams
 #response.css('td[data-stat="player"] a::attr(href)').getall()
+#response.xpath('//tr //a[contains(@href,"playoffs")]').get()
 
 
 class QuotesSpider(scrapy.Spider):
