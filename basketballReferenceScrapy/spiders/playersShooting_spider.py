@@ -10,6 +10,10 @@ class QuotesSpider(scrapy.Spider):
     def start_requests(self):
         urls = [  # List of Urls to go through
            "https://www.basketball-reference.com/leagues/NBA_2019.html" 
+           #"https://www.basketball-reference.com/players/l/lowryky01/shooting/2019"
+           #"https://www.basketball-reference.com/players/l/lowryky01.html"
+           #"https://www.basketball-reference.com/players/i/ingraan01/shooting/2018"
+           #"https://www.basketball-reference.com/players/b/bertada02/shooting/2019"
         ]
         for url in urls:  # Run parse for each url in urls
             yield scrapy.Request(url=url, callback=self.parseLeague)
@@ -47,33 +51,37 @@ class QuotesSpider(scrapy.Spider):
     def parseSeasonShooting(self,response):
         year = response.css('h1::text').get()
         year = re.sub(r'[^0-9\-]','',year)
-        player = response.xpath('//div[contains(@itemtype,"Person")]//strong//strong').get()
-        player = re.findall(r'<strong>(.+?)</strong>', player)
-        startArray = 7
-        if response.xpath('//tr //a[contains(@href,"playoffs")]'): #If it does not have a playoff season
-            startArray = 8
-            print("No Playoff")
-        shootingDistanceAttempts = response.xpath('//tr//td[contains(@data-stat,"fga")]')[startArray:startArray+5]
-        shootingDistanceAttempts = shootingDistanceAttempts.css('td::text').getall()
+        player = response.xpath('//h1//text()').get() #Name
+        playerArray = player.split()
+        shootingDistanceAttemptsArray = [0,0,0,0,0]
+        shootingDistanceMadeArray = [0,0,0,0,0]
+        
+        if response.xpath('//tr//td[a[contains(text(),"Rim")]]'):
+            shootingDistanceAttemptsArray[0] = int(response.xpath('//tr//td[a[contains(text(),"Rim")]]/following-sibling::td[2]//text()').get())
+            shootingDistanceMadeArray[0] = int(response.xpath('//tr//td[a[contains(text(),"Rim")]]/following-sibling::td[1]//text()').get())
+
+        if response.xpath('//tr//td[a[contains(text(),"<10 ft")]]'):
+            shootingDistanceAttemptsArray[1] = int(response.xpath('//tr//td[a[contains(text(),"<10 ft")]]/following-sibling::td[2]//text()').get())
+            shootingDistanceMadeArray[1] = int(response.xpath('//tr//td[a[contains(text(),"<10 ft")]]/following-sibling::td[1]//text()').get())
+
+        if response.xpath('//tr//td[a[contains(text(),"<16 ft")]]'):
+            shootingDistanceAttemptsArray[2] = int(response.xpath('//tr//td[a[contains(text(),"<16 ft")]]/following-sibling::td[2]//text()').get())
+            shootingDistanceMadeArray[2] = int(response.xpath('//tr//td[a[contains(text(),"<16 ft")]]/following-sibling::td[1]//text()').get())
+
+        if response.xpath('//tr//td[a[contains(text(),"<3-pt")]]'):
+            shootingDistanceAttemptsArray[3] = int(response.xpath('//tr//td[a[contains(text(),"<3-pt")]]/following-sibling::td[2]//text()').get())
+            shootingDistanceMadeArray[3] = int(response.xpath('//tr//td[a[contains(text(),"<3-pt")]]/following-sibling::td[1]//text()').get())
+
+        if response.xpath('//tr//td[a[text()="3-pt"]]'):
+            shootingDistanceAttemptsArray[4] = int(response.xpath('//tr//td[a[text()="3-pt"]]/following-sibling::td[2]//text()').get())
+            shootingDistanceMadeArray[4] = int(response.xpath('//tr//td[a[text()="3-pt"]]/following-sibling::td[1]//text()').get())
+
         yield{
-            'Player': player[0],
+            'Player': ' '.join(playerArray[:-2]),
             'Year': year,
-            'Type': "Attempts",
-            'At Rim' : shootingDistanceAttempts[0],
-            '3 to <10 ft': shootingDistanceAttempts[1],
-            '10 to <16 ft': shootingDistanceAttempts[2],
-            '16ft to <3-pt': shootingDistanceAttempts[3],
-            '3-pt': shootingDistanceAttempts[4]
+            'Shot Distribution Attempts' : shootingDistanceAttemptsArray,
+            'Shot Distribution Made' : shootingDistanceMadeArray
         }
-        shootingDistanceMade = response.xpath('//tr//td[@data-stat="fg"]')[startArray:startArray+5]
-        shootingDistanceMade = shootingDistanceMade.css('td::text').getall()
-        yield{
-            'Player': player[0],
-            'Year': year,
-            'Type': "Made",
-            'At Rim' : shootingDistanceMade[0],
-            '3 to <10 ft': shootingDistanceMade[1],
-            '10 to <16 ft': shootingDistanceMade[2],
-            '16ft to <3-pt': shootingDistanceMade[3],
-            '3-pt': shootingDistanceMade[4]
-        }
+
+        #response.xpath('//td').getall()
+        #response.xpath('//td//a[contains(text(),"3 to <10")]//text()').get() Find the one
